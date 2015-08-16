@@ -221,6 +221,7 @@ function setupCesium()
     viewer.terrainProvider = cesiumTerrainProviderMeshes;
     var scene = viewer.scene;				 
     billboards = scene.primitives.add(new Cesium.BillboardCollection());
+    scene.globe.depthTestAgainstTerrain = true;
 }
 
 $(document).ready(function() {
