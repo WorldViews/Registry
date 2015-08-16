@@ -1,11 +1,10 @@
 from tweepy import Stream
 from tweepy import OAuthHandler
 from tweepy.streaming import StreamListener
-import urllib2
-import json
+import os, urllib2, json
 
-IMAGE_DIR = "images"
-CONFIG_PATH = "twitter_auth_config.py"
+IMAGE_DIR = "C:/kimber/WorldViews/twitter_images"
+CONFIG_PATH = "C:/kimber/WorldViews/twitter_auth_config.py"
 """
 You can get authentication values at twitter developer website https://dev.twitter.com/
 """
@@ -18,12 +17,6 @@ asecret = config['asecret']
 
 print "ckey", ckey
 print "csecret", csecret
-"""
-ckey = 'BTM3YIkdlGbrZOlzeTcuvUdkW'
-csecret = '56b3f7mZ8tItaEKwRvn2GrQzyAqN2XqOeYTjiMjadmVpeEdiVD'
-atoken = '26191554-8A2QGfet0VcNIPFco1rMoh0fXwHJDYdWKPiJiKcv9'
-asecret = 'VWfyYnUsoD6dX96zfN8edb80DzVf9Hk2Y7Ka2jpSqRGxv'
-"""
 
 def saveImage(url, n):
     path = "%s/%s.jpg" % (IMAGE_DIR, n)
@@ -80,11 +73,19 @@ class listener(StreamListener):
         print "on_error:"
         print status
 
+def verifyDir(path):
+    if not os.path.exists(path):
+        print "Creating", path
+        os.makedirs(path)
+        
+
 class TwitterWatcher:
     def __init__(self):
         auth = OAuthHandler(ckey, csecret)
         auth.set_access_token(atoken, asecret)
         self.twitterStream = Stream(auth, listener())
+        verifyDir(IMAGE_DIR)
+            
 
     def run(self):
         self.twitterStream.filter(locations=[-180.0, -90.0, 180.0, 90.0])
